@@ -65,3 +65,73 @@ int main()
 
     return 0;
 }
+
+------------------------------------------------------------
+    ---------------------------------------------------------
+
+#include <iostream>
+
+using namespace std;
+
+void swap(int& a, int& b) {
+    int temp = a;
+    a = b;
+    b = temp;
+}
+
+void generatePermutations(int* nums, bool* used, int* perm, int size, int index, bool allowRepetition) {
+    if (index == size) {
+        for (int i = 0; i < size; i++) {
+            cout << perm[i] << " ";
+        }
+        cout << endl;
+        return;
+    }
+
+    for (int i = 0; i < size; i++) {
+        if (!allowRepetition && i > 0 && nums[i] == nums[i - 1] && !used[i - 1])
+            continue;
+
+        if (!used[i]) {
+            used[i] = true;
+            perm[index] = nums[i];
+            generatePermutations(nums, used, perm, size, index + 1, allowRepetition);
+            used[i] = false;
+        }
+    }
+}
+
+void permute(int* nums, int size, bool allowRepetition) {
+    bool* used = new bool[size];
+    int* perm = new int[size];
+
+    for (int i = 0; i < size; i++)
+        used[i] = false;
+
+    generatePermutations(nums, used, perm, size, 0, allowRepetition);
+
+    delete[] used;
+    delete[] perm;
+}
+
+int main() {
+    int size;
+    cout << "Enter the number of elements: ";
+    cin >> size;
+
+    int* nums = new int[size];
+    cout << "Enter the elements: ";
+    for (int i = 0; i < size; i++) {
+        cin >> nums[i];
+    }
+
+    bool allowRepetition;
+    cout << "Allow repetition? (1 for yes, 0 for no): ";
+    cin >> allowRepetition;
+
+    permute(nums, size, allowRepetition);
+
+    delete[] nums;
+
+    return 0;
+}
